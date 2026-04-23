@@ -1,0 +1,7 @@
+{"sessionId":"266921","location":"index.html:openModal:afterShowModal","message":"after showModal","data":{"dialogOpen":true,"openAttr":""},"timestamp":1776933278299,"hypothesisId":"H1","runId":"pre"}
+{"sessionId":"266921","location":"index.html:btnModalClose-click","message":"Close button click","data":{"dialogOpen":true},"timestamp":1776933279445,"hypothesisId":"H2","runId":"pre"}
+{"sessionId":"266921","location":"index.html:closeModalFromUi","message":"closeModalFromUi invoked","data":{"hasDialog":true,"dialogOpenProp":true,"openAttr":"","typeofClose":"function","willCallClose":true},"timestamp":1776933279446,"hypothesisId":"H1","runId":"pre"}
+{"sessionId":"266921","location":"index.html:dialog-click","message":"dialog click","data":{"targetTag":"BUTTON","isDialog":false},"timestamp":1776933279449,"hypothesisId":"H4","runId":"pre"}
+{"sessionId":"266921","location":"index.html:closeModalFromUi:after","message":"after close branch","data":{"dialogOpenAfter":false,"hasOpenAttrAfter":null},"timestamp":1776933279448,"hypothesisId":"H1","runId":"pre"}
+{"sessionId":"266921","location":"index.html:dialog-close-event","message":"dialog close event","data":{"modalOpenBefore":true},"timestamp":1776933279450,"hypothesisId":"H3","runId":"pre"}
+{"sessionId":"266921","location":"index.html:dialog-close-event:state","message":"dialog DOM state after close","data":{"hasOpenAttr":false,"computedDisplay":"none","cssFixApplied":true},"timestamp":1776933279450,"hypothesisId":"H6","runId":"post-fix"}
