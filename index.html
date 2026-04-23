@@ -409,14 +409,12 @@
                     type="button"
                     class="arch-carousel-dot focus-ring"
                     aria-label="Show slide 2 of 3: entrance view"
-                    aria-current="false"
                     data-slide-to="1"
                   ></button>
                   <button
                     type="button"
                     class="arch-carousel-dot focus-ring"
                     aria-label="Show slide 3 of 3: aerial masterplan"
-                    aria-current="false"
                     data-slide-to="2"
                   ></button>
                 </div>
@@ -657,6 +655,134 @@
         el.classList.add('is-visible');
       });
     }
+
+    (function initArchCarousel() {
+      var root = document.getElementById('arch-carousel');
+      if (!root) return;
+
+      var slides = root.querySelectorAll('.arch-carousel-slide');
+      var dots = root.querySelectorAll('.arch-carousel-dot');
+      var btnPrev = root.querySelector('.arch-carousel-prev');
+      var btnNext = root.querySelector('.arch-carousel-next');
+      var live = document.getElementById('arch-carousel-live');
+      var total = slides.length;
+      var index = 0;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var autoplayMs = 7000;
+      var timer = null;
+      var hoverHeld = false;
+      var focusHeld = false;
+
+      function announce() {
+        if (live) live.textContent = 'Slide ' + (index + 1) + ' of ' + total;
+      }
+
+      function setSlide(i) {
+        index = ((i % total) + total) % total;
+        slides.forEach(function (slide, j) {
+          var on = j === index;
+          slide.classList.toggle('is-active', on);
+          slide.setAttribute('aria-hidden', on ? 'false' : 'true');
+        });
+        dots.forEach(function (dot, j) {
+          var on = j === index;
+          dot.classList.toggle('is-active', on);
+          if (on) {
+            dot.setAttribute('aria-current', 'true');
+          } else {
+            dot.removeAttribute('aria-current');
+          }
+        });
+        announce();
+      }
+
+      function next() {
+        setSlide(index + 1);
+      }
+
+      function prev() {
+        setSlide(index - 1);
+      }
+
+      function clearTimer() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      function startTimer() {
+        clearTimer();
+        if (reduceMotion || hoverHeld || focusHeld) return;
+        timer = setInterval(next, autoplayMs);
+      }
+
+      function syncAutoplay() {
+        clearTimer();
+        startTimer();
+      }
+
+      btnPrev.addEventListener('click', function () {
+        prev();
+        syncAutoplay();
+      });
+      btnNext.addEventListener('click', function () {
+        next();
+        syncAutoplay();
+      });
+      dots.forEach(function (dot, j) {
+        dot.addEventListener('click', function () {
+          setSlide(j);
+          syncAutoplay();
+        });
+      });
+
+      root.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          next();
+          syncAutoplay();
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          prev();
+          syncAutoplay();
+        }
+      });
+
+      root.addEventListener('mouseenter', function () {
+        hoverHeld = true;
+        clearTimer();
+      });
+      root.addEventListener('mouseleave', function () {
+        hoverHeld = false;
+        startTimer();
+      });
+      root.addEventListener('focusin', function () {
+        focusHeld = true;
+        clearTimer();
+      });
+      root.addEventListener('focusout', function () {
+        requestAnimationFrame(function () {
+          if (!root.contains(document.activeElement)) {
+            focusHeld = false;
+            startTimer();
+          }
+        });
+      });
+
+      if (window.matchMedia) {
+        var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+        var onMotionChange = function () {
+          reduceMotion = mq.matches;
+          syncAutoplay();
+        };
+        if (mq.addEventListener) mq.addEventListener('change', onMotionChange);
+        else if (mq.addListener) mq.addListener(onMotionChange);
+      }
+
+      announce();
+      startTimer();
+    })();
   </script>
 </body>
 </html>
